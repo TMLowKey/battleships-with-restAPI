@@ -18,37 +18,15 @@
                 </select>
             </header>
 
-            <section id="welcome-screen" class="screen centered">
-                <div class="card title-card">
-                    <h1>Battleship</h1>
-                    <p data-i18n="welcome.subtitle">
-                        Welcome captain. Enter your name to continue.
-                    </p>
-                    <form id="welcome-form" class="stack-form">
-                        <label for="username" data-i18n="welcome.playerName"
-                            >Player Name</label
-                        >
-                        <input
-                            id="username"
-                            name="username"
-                            required
-                            maxlength="100"
-                            placeholder="e.g. Alice"
-                            data-i18n-placeholder="welcome.playerPlaceholder"
-                        />
-                        <button type="submit" data-i18n="welcome.continue">
-                            Continue
-                        </button>
-                    </form>
-                </div>
-            </section>
-
-            <section id="menu-screen" class="screen" hidden>
+            <section id="menu-screen" class="screen">
                 <header class="topbar">
                     <h2 data-i18n="menu.title">Lobby</h2>
-                    <div class="badge">
-                        <span data-i18n="menu.signedInAs">Signed in as</span>
-                        <strong id="menu-username">-</strong>
+                    <div class="actions">
+                        <div class="badge">
+                            <span data-i18n="menu.signedInAs">Signed in as</span>
+                            <strong id="menu-username">-</strong>
+                        </div>
+                        <button id="logout-btn" class="ghost" type="button" data-i18n="menu.logout">Logout</button>
                     </div>
                 </header>
                 <div class="menu-grid">
@@ -65,7 +43,7 @@
                             >Join Existing Game</span
                         >
                         <span class="menu-note" data-i18n="menu.joinNote"
-                            >Use game ID and optional player ID</span
+                            >Use invite code from host</span
                         >
                     </button>
                 </div>
@@ -122,18 +100,15 @@
                 <div class="card">
                     <h2 data-i18n="join.title">Join Game</h2>
                     <form id="join-form" class="stack-form">
-                        <label for="join-game-id" data-i18n="join.gameId"
-                            >Game ID</label
-                        >
-                        <input id="join-game-id" required name="gameId" />
-                        <label for="join-player-id" data-i18n="join.playerId"
-                            >Player ID (optional)</label
+                        <label for="join-player-id" data-i18n="join.inviteToken"
+                            >Invite Code</label
                         >
                         <input
                             id="join-player-id"
-                            name="playerId"
-                            placeholder="auto-detect by name when empty"
+                            name="inviteCode"
+                            placeholder="paste invite code from opponent"
                             data-i18n-placeholder="join.playerPlaceholder"
+                            required
                         />
                         <div class="actions">
                             <button type="submit" data-i18n="join.submit">
@@ -204,6 +179,6 @@
             </footer>
         </main>
 
-        <script src="/ui/app.js"></script>
+        <script src="/ui/app.js?v=3"></script>
     </body>
 </html>

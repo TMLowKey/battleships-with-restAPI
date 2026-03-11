@@ -56,9 +56,8 @@ class InMemoryGameStore:
         to_remove: list[str] = []
 
         for game_id, stored in self._games.items():
-            is_finished = stored.game.status == "finished"
             is_idle = now - stored.last_activity_at >= self._idle_timeout
-            if is_finished or is_idle:
+            if is_idle:
                 to_remove.append(game_id)
 
         for game_id in to_remove:

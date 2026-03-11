@@ -19,20 +19,17 @@ def test_store_limits_active_games() -> None:
         store.save(game2)
 
 
-def test_finished_games_are_cleaned_automatically() -> None:
+def test_finished_games_are_not_removed_immediately() -> None:
     now = [datetime(2026, 1, 1, tzinfo=timezone.utc)]
     store = InMemoryGameStore(max_active_games=1, now_fn=lambda: now[0])
     engine = BattleshipEngine()
 
     game1 = engine.create_game("A", "B", 10)
-    game2 = engine.create_game("C", "D", 10)
     store.save(game1)
 
     game1.status = "finished"
-    store.save(game2)
-
-    with pytest.raises(GameNotFoundError):
-        store.get(game1.game_id)
+    loaded = store.get(game1.game_id)
+    assert loaded.game_id == game1.game_id
 
 
 def test_idle_games_are_removed_after_24_hours() -> None:

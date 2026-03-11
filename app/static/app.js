@@ -1,25 +1,28 @@
 const translations = {
   en: {
     "language.label": "Language",
-    "welcome.subtitle": "Welcome captain. Enter your name to continue.",
-    "welcome.playerName": "Player Name",
-    "welcome.playerPlaceholder": "e.g. Alice",
-    "welcome.continue": "Continue",
+    "welcome.subtitle": "Welcome captain. Sign in to continue.",
+    "welcome.username": "Username",
+    "welcome.usernamePlaceholder": "e.g. alice",
+    "welcome.password": "Password",
+    "welcome.passwordPlaceholder": "at least 8 characters",
+    "welcome.login": "Sign In",
+    "welcome.register": "Sign Up",
     "menu.title": "Lobby",
     "menu.signedInAs": "Signed in as",
+    "menu.logout": "Logout",
     "menu.createTitle": "Create New Game",
     "menu.createNote": "Set board size and invite an opponent",
     "menu.joinTitle": "Join Existing Game",
-    "menu.joinNote": "Use game ID and optional player ID",
+    "menu.joinNote": "Use invite code from host",
     "create.title": "Create Game",
     "create.opponentName": "Opponent Name",
     "create.opponentPlaceholder": "e.g. Bob",
     "create.boardSize": "Board Size (10-20)",
     "create.submit": "Create and Start",
     "join.title": "Join Game",
-    "join.gameId": "Game ID",
-    "join.playerId": "Player ID (optional)",
-    "join.playerPlaceholder": "auto-detect by name when empty",
+    "join.inviteToken": "Invite Code",
+    "join.playerPlaceholder": "paste invite code from opponent",
     "join.submit": "Join",
     "game.title": "Battlefield",
     "game.leave": "Leave Game",
@@ -29,78 +32,68 @@ const translations = {
     "game.status": "Status:",
     "game.yourBoard": "Your Board",
     "game.yourShots": "Your Shots",
-    "game.finished": "Game finished. Winner: {winner}",
+    "game.finished.win": "Victory! You won the game.",
+    "game.finished.lose": "Defeat. Better luck next time.",
+    "game.finished.draw": "Game finished.",
     "game.yourTurn": "Your turn. Click a cell on your shots board.",
     "game.waiting": "Waiting for opponent move...",
     "game.noPerspective": "No perspective available.",
     "common.back": "Back",
     "error.needOpponent": "Please provide opponent name.",
-    "error.needGameId": "Please provide game id.",
-    "error.needGameAndPlayer": "Please provide game id and player id.",
-    "error.playerNotDetected":
-      "Could not detect your player ID in created game.",
-    "error.autoDetectFailed":
-      "Could not auto-detect player ID by name. Enter player ID manually.",
-    "create.result.gameId": "Game ID: {id}",
-    "create.result.yourPlayerId": "Your Player ID: {id}",
-    "create.result.share":
-      "Share with opponent: Game ID {gameId}, Player ID {playerId}",
+    "error.needInvite": "Please provide invite code.",
     "footer.note": "Created as a Take-home assignment for VZP",
   },
   cs: {
     "language.label": "Jazyk",
-    "welcome.subtitle": "Vítejte, kapitáne. Zadejte své jméno a pokračujte.",
-    "welcome.playerName": "Jméno hráče",
-    "welcome.playerPlaceholder": "např. Alice",
-    "welcome.continue": "Pokračovat",
+    "welcome.subtitle": "Vitejte, kapitane. Prihlaste se pro pokracovani.",
+    "welcome.username": "Uzivatelske jmeno",
+    "welcome.usernamePlaceholder": "napr. alice",
+    "welcome.password": "Heslo",
+    "welcome.passwordPlaceholder": "alespon 8 znaku",
+    "welcome.login": "Prihlasit",
+    "welcome.register": "Vytvorit ucet",
     "menu.title": "Lobby",
-    "menu.signedInAs": "Přihlášen jako",
-    "menu.createTitle": "Vytvořit novou hru",
-    "menu.createNote": "Nastavte velikost hrací plochy a pozvěte soupeře.",
-    "menu.joinTitle": "Připojit se ke hře",
-    "menu.joinNote": "Použijte ID hry a volitelně i ID hráče.",
-    "create.title": "Vytvoření hry",
-    "create.opponentName": "Jméno soupeře",
-    "create.opponentPlaceholder": "např. Bob",
-    "create.boardSize": "Velikost hrací plochy (10–20)",
-    "create.submit": "Vytvořit a spustit",
-    "join.title": "Připojení ke hře",
-    "join.gameId": "ID hry",
-    "join.playerId": "ID hráče (volitelné)",
-    "join.playerPlaceholder":
-      "Pokud pole necháte prázdné, hráč se zkusí najít podle jména.",
-    "join.submit": "Připojit se",
-    "game.title": "Bojiště",
+    "menu.signedInAs": "Prihlasen jako",
+    "menu.logout": "Odhlasit",
+    "menu.createTitle": "Vytvorit novou hru",
+    "menu.createNote": "Nastavte velikost hraci plochy a pozvete soupere.",
+    "menu.joinTitle": "Pripojit se ke hre",
+    "menu.joinNote": "Pouzijte pozvankovy kod od hostitele",
+    "create.title": "Vytvoreni hry",
+    "create.opponentName": "Jmeno soupere",
+    "create.opponentPlaceholder": "napr. Bob",
+    "create.boardSize": "Velikost hraci plochy (10-20)",
+    "create.submit": "Vytvorit a spustit",
+    "join.title": "Pripojeni ke hre",
+    "join.inviteToken": "Pozvankovy kod",
+    "join.playerPlaceholder": "vlozte pozvankovy kod od soupere",
+    "join.submit": "Pripojit se",
+    "game.title": "Bojiste",
     "game.leave": "Opustit hru",
     "game.gameId": "Hra:",
     "game.you": "Vy:",
     "game.turn": "Tah:",
     "game.status": "Stav:",
-    "game.yourBoard": "Vaše lodě",
-    "game.yourShots": "Vaše střely",
-    "game.finished": "Hra skončila. Vítěz: {winner}",
-    "game.yourTurn": "Jste na tahu. Klikněte na pole v pravé části plánu.",
-    "game.waiting": "Čeká se na tah soupeře...",
-    "game.noPerspective": "Perspektiva hráče není k dispozici.",
-    "common.back": "Zpět",
-    "error.needOpponent": "Zadejte prosím jméno soupeře.",
-    "error.needGameId": "Zadejte prosím ID hry.",
-    "error.needGameAndPlayer": "Zadejte prosím ID hry i ID hráče.",
-    "error.playerNotDetected":
-      "Nepodařilo se zjistit vaše ID hráče ve vytvořené hře.",
-    "error.autoDetectFailed":
-      "Nepodařilo se automaticky najít ID hráče podle jména. Zadejte jej ručně.",
-    "create.result.gameId": "ID hry: {id}",
-    "create.result.yourPlayerId": "Vaše ID hráče: {id}",
-    "create.result.share":
-      "Sdílejte se soupeřem: ID hry {gameId}, ID hráče {playerId}",
-    "footer.note": "Vytvořeno jako take-home assignment pro VZP.",
+    "game.yourBoard": "Vase lode",
+    "game.yourShots": "Vase strely",
+    "game.finished.win": "Vitezstvi! Hru jste vyhral.",
+    "game.finished.lose": "Prohra. Priste to vyjde.",
+    "game.finished.draw": "Hra skoncila.",
+    "game.yourTurn": "Jste na tahu. Kliknete na pole vpravo.",
+    "game.waiting": "Ceka se na tah soupere...",
+    "game.noPerspective": "Perspektiva hrace neni k dispozici.",
+    "common.back": "Zpet",
+    "error.needOpponent": "Zadejte prosim jmeno soupere.",
+    "error.needInvite": "Zadejte prosim pozvankovy kod.",
+    "footer.note": "Vytvoreno jako take-home assignment pro VZP.",
   },
 };
 
 const state = {
   language: localStorage.getItem("battleship-language") || "en",
   username: "",
+  accessToken: localStorage.getItem("battleship-access-token"),
+  refreshToken: localStorage.getItem("battleship-refresh-token"),
   gameId: null,
   playerId: null,
   boardSize: null,
@@ -109,18 +102,15 @@ const state = {
 };
 
 const screens = {
-  welcome: document.getElementById("welcome-screen"),
   menu: document.getElementById("menu-screen"),
   create: document.getElementById("create-screen"),
   join: document.getElementById("join-screen"),
   game: document.getElementById("game-screen"),
 };
 
-const welcomeForm = document.getElementById("welcome-form");
 const createForm = document.getElementById("create-form");
 const joinForm = document.getElementById("join-form");
 const languageSelect = document.getElementById("language-select");
-
 const menuUsername = document.getElementById("menu-username");
 const createResult = document.getElementById("create-result");
 const gameIdEl = document.getElementById("game-id");
@@ -140,77 +130,30 @@ languageSelect.addEventListener("change", () => {
   applyStaticTranslations();
 });
 
-document
-  .getElementById("go-create")
-  .addEventListener("click", () => showScreen("create"));
-document
-  .getElementById("go-join")
-  .addEventListener("click", () => showScreen("join"));
-document
-  .getElementById("back-from-create")
-  .addEventListener("click", () => showScreen("menu"));
-document
-  .getElementById("back-from-join")
-  .addEventListener("click", () => showScreen("menu"));
+document.getElementById("go-create").addEventListener("click", () => showScreen("create"));
+document.getElementById("go-join").addEventListener("click", () => showScreen("join"));
+document.getElementById("back-from-create").addEventListener("click", () => showScreen("menu"));
+document.getElementById("back-from-join").addEventListener("click", () => showScreen("menu"));
 document.getElementById("leave-game").addEventListener("click", leaveGame);
-
-welcomeForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const data = new FormData(welcomeForm);
-  const username = String(data.get("username") || "").trim();
-  if (!username) {
-    return;
-  }
-  state.username = username;
-  menuUsername.textContent = username;
-  showScreen("menu");
-});
+document.getElementById("logout-btn").addEventListener("click", logout);
 
 createForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  createResult.textContent = "";
-
+  createResult.replaceChildren();
   const data = new FormData(createForm);
   const opponentName = String(data.get("opponent") || "").trim();
   const boardSize = Number(data.get("size"));
-
   if (!opponentName) {
     createResult.textContent = t("error.needOpponent");
     return;
   }
-
   try {
     const response = await api("/games", {
       method: "POST",
-      body: JSON.stringify({
-        player1_name: state.username,
-        player2_name: opponentName,
-        board_size: boardSize,
-      }),
+      body: JSON.stringify({ opponent_name: opponentName, board_size: boardSize }),
     });
-
-    const myPlayer = response.players.find(
-      (p) => p.name.toLowerCase() === state.username.toLowerCase(),
-    );
-    const opponentPlayer = response.players.find(
-      (p) => p.player_id !== myPlayer?.player_id,
-    );
-
-    if (!myPlayer) {
-      createResult.textContent = t("error.playerNotDetected");
-      return;
-    }
-
-    createResult.innerHTML = [
-      `<div>${t("create.result.gameId", { id: wrapCode(response.game_id) })}</div>`,
-      `<div>${t("create.result.yourPlayerId", { id: wrapCode(myPlayer.player_id) })}</div>`,
-      `<div>${t("create.result.share", {
-        gameId: wrapCode(response.game_id),
-        playerId: wrapCode(opponentPlayer?.player_id || "unknown"),
-      })}</div>`,
-    ].join("");
-
-    attachToGame(response.game_id, myPlayer.player_id);
+    renderCreateResult(response);
+    attachToGame(response.game_id);
   } catch (error) {
     createResult.textContent = error.message;
   }
@@ -219,33 +162,53 @@ createForm.addEventListener("submit", async (event) => {
 joinForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const data = new FormData(joinForm);
-  const gameId = String(data.get("gameId") || "").trim();
-  const explicitPlayerId = String(data.get("playerId") || "").trim();
-
-  if (!gameId) {
-    setMessage(t("error.needGameId"));
+  const inviteCode = String(data.get("inviteCode") || "").trim();
+  if (!inviteCode) {
+    setMessage(t("error.needInvite"));
     return;
   }
-
-  if (explicitPlayerId) {
-    attachToGame(gameId, explicitPlayerId);
-    return;
-  }
-
   try {
-    const game = await api(`/games/${encodeURIComponent(gameId)}`);
-    const matches = game.players.filter(
-      (p) => p.name.toLowerCase() === state.username.toLowerCase(),
-    );
-    if (matches.length !== 1) {
-      setMessage(t("error.autoDetectFailed"));
-      return;
-    }
-    attachToGame(gameId, matches[0].player_id);
+    const response = await api("/games/join", {
+      method: "POST",
+      body: JSON.stringify({ invite_code: inviteCode }),
+    });
+    attachToGame(response.game_id);
   } catch (error) {
     setMessage(error.message);
   }
 });
+
+void ensureAuthenticated();
+
+async function ensureAuthenticated() {
+  if (!state.accessToken && !state.refreshToken) {
+    window.location.replace("/login");
+    return;
+  }
+  try {
+    const me = await api("/auth/me");
+    state.username = me.username;
+    menuUsername.textContent = me.username;
+    showScreen("menu");
+  } catch {
+    clearAuthTokens();
+    window.location.replace("/login");
+  }
+}
+
+function setAuthTokens(accessToken, refreshToken) {
+  state.accessToken = accessToken;
+  state.refreshToken = refreshToken;
+  localStorage.setItem("battleship-access-token", accessToken);
+  localStorage.setItem("battleship-refresh-token", refreshToken);
+}
+
+function clearAuthTokens() {
+  state.accessToken = null;
+  state.refreshToken = null;
+  localStorage.removeItem("battleship-access-token");
+  localStorage.removeItem("battleship-refresh-token");
+}
 
 function applyStaticTranslations() {
   document.documentElement.lang = state.language === "cs" ? "cs" : "en";
@@ -282,22 +245,13 @@ function showScreen(target) {
   }
 }
 
-function attachToGame(gameId, playerId) {
-  if (!gameId || !playerId) {
-    setMessage(t("error.needGameAndPlayer"));
-    return;
-  }
-
+function attachToGame(gameId) {
   state.gameId = gameId;
-  state.playerId = playerId;
   gameIdEl.textContent = gameId;
-  selfPlayerEl.textContent = playerId;
   showScreen("game");
-
   if (state.pollTimer) {
     window.clearInterval(state.pollTimer);
   }
-
   void refreshState();
   state.pollTimer = window.setInterval(refreshState, 2000);
 }
@@ -310,22 +264,26 @@ function leaveGame() {
   state.gameId = null;
   state.playerId = null;
   state.boardSize = null;
-  ownBoardEl.innerHTML = "";
-  shotsBoardEl.innerHTML = "";
+  ownBoardEl.replaceChildren();
+  shotsBoardEl.replaceChildren();
   setMessage("");
   showScreen("menu");
 }
 
+function logout() {
+  leaveGame();
+  clearAuthTokens();
+  window.location.replace("/login");
+}
+
 async function refreshState() {
-  if (!state.gameId || !state.playerId) {
+  if (!state.gameId) {
     return;
   }
-
   try {
-    const game = await api(
-      `/games/${state.gameId}?player_id=${encodeURIComponent(state.playerId)}`,
-    );
+    const game = await api(`/games/${state.gameId}`);
     state.boardSize = game.board_size;
+    state.playerId = game.requesting_player_id;
     renderGame(game);
   } catch (error) {
     setMessage(error.message);
@@ -333,12 +291,21 @@ async function refreshState() {
 }
 
 function renderGame(game) {
-  turnPlayerEl.textContent = game.current_turn_player_id;
-  gameStatusEl.textContent = game.status;
+  const playerNameById = new Map((game.players || []).map((player) => [player.player_id, player.name]));
+  const selfName = playerNameById.get(game.requesting_player_id) || game.requesting_player_id;
+  const turnName = playerNameById.get(game.current_turn_player_id) || game.current_turn_player_id;
 
+  selfPlayerEl.textContent = selfName;
+  turnPlayerEl.textContent = turnName;
+  gameStatusEl.textContent = game.status;
   if (game.status === "finished") {
-    const winner = game.winner_player_id || "unknown";
-    setMessage(t("game.finished", { winner }));
+    if (game.winner_player_id && game.winner_player_id === state.playerId) {
+      setMessage(t("game.finished.win"));
+    } else if (game.winner_player_id) {
+      setMessage(t("game.finished.lose"));
+    } else {
+      setMessage(t("game.finished.draw"));
+    }
   } else if (game.current_turn_player_id === state.playerId) {
     setMessage(t("game.yourTurn"));
   } else {
@@ -375,30 +342,17 @@ function renderGame(game) {
     ownHits,
     shotHits,
     shotMisses,
-    canTarget:
-      game.status === "active" &&
-      game.current_turn_player_id === state.playerId,
+    canTarget: game.status === "active" && game.current_turn_player_id === state.playerId,
   });
 }
 
-function drawGrid({
-  element,
-  size,
-  mode,
-  ownShips,
-  ownHits,
-  shotHits,
-  shotMisses,
-  canTarget,
-}) {
-  element.innerHTML = "";
+function drawGrid({ element, size, mode, ownShips, ownHits, shotHits, shotMisses, canTarget }) {
+  element.replaceChildren();
   element.style.gridTemplateColumns = `28px repeat(${size}, 26px)`;
-
   element.appendChild(axisCorner());
   for (let x = 0; x < size; x += 1) {
     element.appendChild(axisCell(columnLabel(x)));
   }
-
   for (let y = 0; y < size; y += 1) {
     element.appendChild(axisCell(String(y)));
     for (let x = 0; x < size; x += 1) {
@@ -406,9 +360,6 @@ function drawGrid({
       const cell = document.createElement("button");
       cell.type = "button";
       cell.className = "cell";
-      cell.dataset.x = String(x);
-      cell.dataset.y = String(y);
-
       if (mode === "own") {
         if (ownShips.has(key)) {
           cell.classList.add("ship");
@@ -427,7 +378,6 @@ function drawGrid({
         cell.classList.add("targetable");
         cell.addEventListener("click", () => void fireAt(x, y));
       }
-
       element.appendChild(cell);
     }
   }
@@ -437,13 +387,9 @@ async function fireAt(x, y) {
   if (state.loadingTurn || !state.gameId || !state.playerId) {
     return;
   }
-
   state.loadingTurn = true;
   try {
-    await api(`/games/${state.gameId}/turns`, {
-      method: "POST",
-      body: JSON.stringify({ player_id: state.playerId, x, y }),
-    });
+    await api(`/games/${state.gameId}/turn`, { method: "POST", body: JSON.stringify({ x, y }) });
     await refreshState();
   } catch (error) {
     setMessage(error.message);
@@ -477,32 +423,93 @@ function columnLabel(index) {
   return String.fromCharCode("A".charCodeAt(0) + index);
 }
 
-function wrapCode(value) {
-  return `<code>${value}</code>`;
+function renderCreateResult(response) {
+  createResult.replaceChildren();
+  appendCodeLine(createResult, "Game ID", response.game_id);
+  appendCodeLine(createResult, "Invite code", response.invite_code);
+}
+
+function appendCodeLine(container, label, value) {
+  const row = document.createElement("div");
+  const code = document.createElement("code");
+  code.textContent = String(value);
+  row.append(`${label}: `, code);
+  container.appendChild(row);
 }
 
 function setMessage(text) {
   messageEl.textContent = text;
 }
 
-async function api(path, options = {}) {
-  const response = await fetch(path, {
+async function refreshTokens() {
+  if (!state.refreshToken) {
+    throw new Error("Not authenticated.");
+  }
+  const response = await fetch("/auth/refresh", {
+    method: "POST",
     headers: { "Content-Type": "application/json" },
-    ...options,
+    body: JSON.stringify({ refresh_token: state.refreshToken }),
   });
+  if (!response.ok) {
+    clearAuthTokens();
+    throw new Error("Session expired. Please sign in again.");
+  }
+  const body = await response.json();
+  setAuthTokens(body.access_token, body.refresh_token);
+}
+
+async function api(path, options = {}) {
+  const skipAuth = Boolean(options.skipAuth);
+  const requestOptions = { ...options };
+  delete requestOptions.skipAuth;
+  const headers = { ...(requestOptions.headers || {}) };
+  if (requestOptions.body && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
+  if (!skipAuth && state.accessToken) {
+    headers.Authorization = `Bearer ${state.accessToken}`;
+  }
+
+  let response = await fetch(path, { ...requestOptions, headers });
+  if (response.status === 401 && !skipAuth && state.refreshToken) {
+    await refreshTokens();
+    headers.Authorization = `Bearer ${state.accessToken}`;
+    response = await fetch(path, { ...requestOptions, headers });
+  }
 
   if (!response.ok) {
     let detail = response.statusText;
     try {
       const body = await response.json();
       if (body && typeof body.detail !== "undefined") {
-        detail = String(body.detail);
+        detail = extractApiDetail(body.detail);
       }
     } catch {
       // ignore parse errors
     }
     throw new Error(`API error ${response.status}: ${detail}`);
   }
-
   return response.json();
+}
+
+function extractApiDetail(detail) {
+  if (Array.isArray(detail)) {
+    const messages = detail
+      .map((item) => {
+        if (!item || typeof item !== "object") {
+          return String(item);
+        }
+        const path = Array.isArray(item.loc) ? item.loc.join(".") : "field";
+        const message = item.msg ? String(item.msg) : "invalid value";
+        return `${path}: ${message}`;
+      })
+      .filter(Boolean);
+    if (messages.length > 0) {
+      return messages.join("; ");
+    }
+  }
+  if (detail && typeof detail === "object") {
+    return JSON.stringify(detail);
+  }
+  return String(detail);
 }
