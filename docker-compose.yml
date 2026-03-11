@@ -1,0 +1,12 @@
+services:
+  battleship:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: battleship
+    ports:
+      - "127.0.0.1:18000:8000"
+    environment:
+      MAX_ACTIVE_GAMES: "50"
+      IDLE_TIMEOUT_HOURS: "24"
+    restart: unless-stopped

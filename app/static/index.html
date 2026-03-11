@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Battleship</title>
+        <link rel="stylesheet" href="/ui/style.css" />
+    </head>
+    <body>
+        <main class="page">
+            <header class="lang-bar">
+                <label for="language-select" data-i18n="language.label"
+                    >Language</label
+                >
+                <select id="language-select" aria-label="Language selector">
+                    <option value="en">English</option>
+                    <option value="cs">Čestina</option>
+                </select>
+            </header>
+
+            <section id="welcome-screen" class="screen centered">
+                <div class="card title-card">
+                    <h1>Battleship</h1>
+                    <p data-i18n="welcome.subtitle">
+                        Welcome captain. Enter your name to continue.
+                    </p>
+                    <form id="welcome-form" class="stack-form">
+                        <label for="username" data-i18n="welcome.playerName"
+                            >Player Name</label
+                        >
+                        <input
+                            id="username"
+                            name="username"
+                            required
+                            maxlength="100"
+                            placeholder="e.g. Alice"
+                            data-i18n-placeholder="welcome.playerPlaceholder"
+                        />
+                        <button type="submit" data-i18n="welcome.continue">
+                            Continue
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="menu-screen" class="screen" hidden>
+                <header class="topbar">
+                    <h2 data-i18n="menu.title">Lobby</h2>
+                    <div class="badge">
+                        <span data-i18n="menu.signedInAs">Signed in as</span>
+                        <strong id="menu-username">-</strong>
+                    </div>
+                </header>
+                <div class="menu-grid">
+                    <button id="go-create" class="menu-card" type="button">
+                        <span class="menu-title" data-i18n="menu.createTitle"
+                            >Create New Game</span
+                        >
+                        <span class="menu-note" data-i18n="menu.createNote"
+                            >Set board size and invite an opponent</span
+                        >
+                    </button>
+                    <button id="go-join" class="menu-card" type="button">
+                        <span class="menu-title" data-i18n="menu.joinTitle"
+                            >Join Existing Game</span
+                        >
+                        <span class="menu-note" data-i18n="menu.joinNote"
+                            >Use game ID and optional player ID</span
+                        >
+                    </button>
+                </div>
+            </section>
+
+            <section id="create-screen" class="screen" hidden>
+                <div class="card">
+                    <h2 data-i18n="create.title">Create Game</h2>
+                    <form id="create-form" class="stack-form">
+                        <label
+                            for="opponent-name"
+                            data-i18n="create.opponentName"
+                            >Opponent Name</label
+                        >
+                        <input
+                            id="opponent-name"
+                            name="opponent"
+                            required
+                            maxlength="100"
+                            placeholder="e.g. Bob"
+                            data-i18n-placeholder="create.opponentPlaceholder"
+                        />
+                        <label for="board-size" data-i18n="create.boardSize"
+                            >Board Size (10-20)</label
+                        >
+                        <input
+                            id="board-size"
+                            type="number"
+                            name="size"
+                            required
+                            min="10"
+                            max="20"
+                            value="10"
+                        />
+                        <div class="actions">
+                            <button type="submit" data-i18n="create.submit">
+                                Create and Start
+                            </button>
+                            <button
+                                id="back-from-create"
+                                class="ghost"
+                                type="button"
+                                data-i18n="common.back"
+                            >
+                                Back
+                            </button>
+                        </div>
+                    </form>
+                    <div id="create-result" class="muted"></div>
+                </div>
+            </section>
+
+            <section id="join-screen" class="screen" hidden>
+                <div class="card">
+                    <h2 data-i18n="join.title">Join Game</h2>
+                    <form id="join-form" class="stack-form">
+                        <label for="join-game-id" data-i18n="join.gameId"
+                            >Game ID</label
+                        >
+                        <input id="join-game-id" required name="gameId" />
+                        <label for="join-player-id" data-i18n="join.playerId"
+                            >Player ID (optional)</label
+                        >
+                        <input
+                            id="join-player-id"
+                            name="playerId"
+                            placeholder="auto-detect by name when empty"
+                            data-i18n-placeholder="join.playerPlaceholder"
+                        />
+                        <div class="actions">
+                            <button type="submit" data-i18n="join.submit">
+                                Join
+                            </button>
+                            <button
+                                id="back-from-join"
+                                class="ghost"
+                                type="button"
+                                data-i18n="common.back"
+                            >
+                                Back
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section class="screen" id="game-screen" hidden>
+                <header class="topbar">
+                    <h2 data-i18n="game.title">Battlefield</h2>
+                    <button
+                        id="leave-game"
+                        class="ghost"
+                        type="button"
+                        data-i18n="game.leave"
+                    >
+                        Leave Game
+                    </button>
+                </header>
+
+                <section class="card" id="game-panel">
+                    <div class="status-row">
+                        <div>
+                            <strong data-i18n="game.gameId">Game:</strong>
+                            <span id="game-id">-</span>
+                        </div>
+                        <div>
+                            <strong data-i18n="game.you">You:</strong>
+                            <span id="self-player">-</span>
+                        </div>
+                        <div>
+                            <strong data-i18n="game.turn">Turn:</strong>
+                            <span id="turn-player">-</span>
+                        </div>
+                        <div>
+                            <strong data-i18n="game.status">Status:</strong>
+                            <span id="game-status">-</span>
+                        </div>
+                    </div>
+                    <p id="message" class="message"></p>
+
+                    <div class="boards">
+                        <div>
+                            <h3 data-i18n="game.yourBoard">Your Board</h3>
+                            <div id="own-board" class="board"></div>
+                        </div>
+                        <div>
+                            <h3 data-i18n="game.yourShots">Your Shots</h3>
+                            <div id="shots-board" class="board"></div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <footer class="page-footer" data-i18n="footer.note">
+                Vytvořeno jako Take-home assignment pro VZP
+            </footer>
+        </main>
+
+        <script src="/ui/app.js"></script>
+    </body>
+</html>
