@@ -1,8 +1,8 @@
 # Lodě – REST API + GUI + CLI
 
-Tento projekt implementuje take-home zadání hry **Lodě** pro 2 hráče.
+Tento projekt implementuje take-home zadání hry **Lodě** pro 2 hráče. Projekt je dostupný jednak přes selfhosting (návod níže) druhak na https://warships.tengler.app/game/ v GUI, případně instrukce pro REST API ovládání jsou dostupné na https://warships.tengler.app/docs/.
 
-## Rychlý start (60 sekund)
+## Rychlý start
 
 ```bash
 docker compose up -d --build
@@ -152,3 +152,4 @@ Při produkčním nasazení by dávalo smysl doplnit databázi, autentizaci, aud
 * REST API je platformně nezávislé.
 * Webové GUI běží v moderních prohlížečích na všech běžných OS.
 * CLI klient běží všude, kde je dostupný Python 3.12+.
+
