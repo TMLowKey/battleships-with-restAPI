@@ -45,47 +45,47 @@ const translations = {
   },
   cs: {
     "language.label": "Jazyk",
-    "welcome.subtitle": "Vitejte, kapitane. Prihlaste se pro pokracovani.",
-    "welcome.username": "Uzivatelske jmeno",
-    "welcome.usernamePlaceholder": "napr. alice",
+    "welcome.subtitle": "Vítejte, kapitáne. Přihlaste se pro pokračování.",
+    "welcome.username": "Uživatelské jméno",
+    "welcome.usernamePlaceholder": "např. alice",
     "welcome.password": "Heslo",
-    "welcome.passwordPlaceholder": "alespon 8 znaku",
-    "welcome.login": "Prihlasit",
-    "welcome.register": "Vytvorit ucet",
+    "welcome.passwordPlaceholder": "alespoň 8 znaků",
+    "welcome.login": "Přihlásit",
+    "welcome.register": "Vytvořit účet",
     "menu.title": "Lobby",
-    "menu.signedInAs": "Prihlasen jako",
-    "menu.logout": "Odhlasit",
-    "menu.createTitle": "Vytvorit novou hru",
-    "menu.createNote": "Nastavte velikost hraci plochy a pozvete soupere.",
-    "menu.joinTitle": "Pripojit se ke hre",
-    "menu.joinNote": "Pouzijte pozvankovy kod od hostitele",
-    "create.title": "Vytvoreni hry",
-    "create.opponentName": "Jmeno soupere",
-    "create.opponentPlaceholder": "napr. Bob",
-    "create.boardSize": "Velikost hraci plochy (10-20)",
-    "create.submit": "Vytvorit a spustit",
-    "join.title": "Pripojeni ke hre",
-    "join.inviteToken": "Pozvankovy kod",
-    "join.playerPlaceholder": "vlozte pozvankovy kod od soupere",
-    "join.submit": "Pripojit se",
-    "game.title": "Bojiste",
+    "menu.signedInAs": "Přihlášen jako",
+    "menu.logout": "Odhlásit",
+    "menu.createTitle": "Vytvořit novou hru",
+    "menu.createNote": "Nastavte velikost hrací plochy a pozvěte soupeře.",
+    "menu.joinTitle": "Připojit se ke hře",
+    "menu.joinNote": "Použijte pozvánkový kód od hostitele.",
+    "create.title": "Vytvoření hry",
+    "create.opponentName": "Jméno soupeře",
+    "create.opponentPlaceholder": "např. Bob",
+    "create.boardSize": "Velikost hrací plochy (10–20)",
+    "create.submit": "Vytvořit a spustit",
+    "join.title": "Připojení ke hře",
+    "join.inviteToken": "Pozvánkový kód",
+    "join.playerPlaceholder": "Vložte pozvánkový kód od soupeře",
+    "join.submit": "Připojit se",
+    "game.title": "Bojiště",
     "game.leave": "Opustit hru",
     "game.gameId": "Hra:",
     "game.you": "Vy:",
     "game.turn": "Tah:",
     "game.status": "Stav:",
-    "game.yourBoard": "Vase lode",
-    "game.yourShots": "Vase strely",
-    "game.finished.win": "Vitezstvi! Hru jste vyhral.",
-    "game.finished.lose": "Prohra. Priste to vyjde.",
-    "game.finished.draw": "Hra skoncila.",
-    "game.yourTurn": "Jste na tahu. Kliknete na pole vpravo.",
-    "game.waiting": "Ceka se na tah soupere...",
-    "game.noPerspective": "Perspektiva hrace neni k dispozici.",
-    "common.back": "Zpet",
-    "error.needOpponent": "Zadejte prosim jmeno soupere.",
-    "error.needInvite": "Zadejte prosim pozvankovy kod.",
-    "footer.note": "Vytvoreno jako take-home assignment pro VZP.",
+    "game.yourBoard": "Vaše lodě",
+    "game.yourShots": "Vaše střely",
+    "game.finished.win": "Vítězství! Hru jste vyhrál.",
+    "game.finished.lose": "Prohra. Příště to vyjde.",
+    "game.finished.draw": "Hra skončila.",
+    "game.yourTurn": "Jste na tahu. Klikněte na pole vpravo.",
+    "game.waiting": "Čeká se na tah soupeře...",
+    "game.noPerspective": "Perspektiva hráče není k dispozici.",
+    "common.back": "Zpět",
+    "error.needOpponent": "Zadejte prosím jméno soupeře.",
+    "error.needInvite": "Zadejte prosím pozvánkový kód.",
+    "footer.note": "Vytvořeno jako take-home assignment pro VZP.",
   },
 };
 
@@ -130,10 +130,18 @@ languageSelect.addEventListener("change", () => {
   applyStaticTranslations();
 });
 
-document.getElementById("go-create").addEventListener("click", () => showScreen("create"));
-document.getElementById("go-join").addEventListener("click", () => showScreen("join"));
-document.getElementById("back-from-create").addEventListener("click", () => showScreen("menu"));
-document.getElementById("back-from-join").addEventListener("click", () => showScreen("menu"));
+document
+  .getElementById("go-create")
+  .addEventListener("click", () => showScreen("create"));
+document
+  .getElementById("go-join")
+  .addEventListener("click", () => showScreen("join"));
+document
+  .getElementById("back-from-create")
+  .addEventListener("click", () => showScreen("menu"));
+document
+  .getElementById("back-from-join")
+  .addEventListener("click", () => showScreen("menu"));
 document.getElementById("leave-game").addEventListener("click", leaveGame);
 document.getElementById("logout-btn").addEventListener("click", logout);
 
@@ -150,7 +158,10 @@ createForm.addEventListener("submit", async (event) => {
   try {
     const response = await api("/games", {
       method: "POST",
-      body: JSON.stringify({ opponent_name: opponentName, board_size: boardSize }),
+      body: JSON.stringify({
+        opponent_name: opponentName,
+        board_size: boardSize,
+      }),
     });
     renderCreateResult(response);
     attachToGame(response.game_id);
@@ -291,9 +302,14 @@ async function refreshState() {
 }
 
 function renderGame(game) {
-  const playerNameById = new Map((game.players || []).map((player) => [player.player_id, player.name]));
-  const selfName = playerNameById.get(game.requesting_player_id) || game.requesting_player_id;
-  const turnName = playerNameById.get(game.current_turn_player_id) || game.current_turn_player_id;
+  const playerNameById = new Map(
+    (game.players || []).map((player) => [player.player_id, player.name]),
+  );
+  const selfName =
+    playerNameById.get(game.requesting_player_id) || game.requesting_player_id;
+  const turnName =
+    playerNameById.get(game.current_turn_player_id) ||
+    game.current_turn_player_id;
 
   selfPlayerEl.textContent = selfName;
   turnPlayerEl.textContent = turnName;
@@ -342,11 +358,22 @@ function renderGame(game) {
     ownHits,
     shotHits,
     shotMisses,
-    canTarget: game.status === "active" && game.current_turn_player_id === state.playerId,
+    canTarget:
+      game.status === "active" &&
+      game.current_turn_player_id === state.playerId,
   });
 }
 
-function drawGrid({ element, size, mode, ownShips, ownHits, shotHits, shotMisses, canTarget }) {
+function drawGrid({
+  element,
+  size,
+  mode,
+  ownShips,
+  ownHits,
+  shotHits,
+  shotMisses,
+  canTarget,
+}) {
   element.replaceChildren();
   element.style.gridTemplateColumns = `28px repeat(${size}, 26px)`;
   element.appendChild(axisCorner());
@@ -389,7 +416,10 @@ async function fireAt(x, y) {
   }
   state.loadingTurn = true;
   try {
-    await api(`/games/${state.gameId}/turn`, { method: "POST", body: JSON.stringify({ x, y }) });
+    await api(`/games/${state.gameId}/turn`, {
+      method: "POST",
+      body: JSON.stringify({ x, y }),
+    });
     await refreshState();
   } catch (error) {
     setMessage(error.message);

@@ -11,13 +11,13 @@ const translations = {
   },
   cs: {
     "language.label": "Jazyk",
-    "welcome.subtitle": "Vitejte, kapitane. Prihlaste se pro pokracovani.",
-    "welcome.username": "Uzivatelske jmeno",
-    "welcome.usernamePlaceholder": "napr. alice",
+    "welcome.subtitle": "Vítejte, kapitáne. Přihlaste se pro pokračování.",
+    "welcome.username": "Uživatelské jméno",
+    "welcome.usernamePlaceholder": "např. alice",
     "welcome.password": "Heslo",
-    "welcome.passwordPlaceholder": "alespon 8 znaku",
-    "welcome.login": "Prihlasit",
-    "welcome.register": "Vytvorit ucet",
+    "welcome.passwordPlaceholder": "alespoň 8 znaků",
+    "welcome.login": "Přihlásit",
+    "welcome.register": "Vytvořit účet",
   },
 };
 
