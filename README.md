@@ -1,6 +1,6 @@
 # Lodě – REST API + GUI
 
-Tento projekt implementuje take-home zadání hry **Lodě** pro 2 hráče. Projekt je dostupný jednak přes selfhosting (návod níže) druhak na https://warships.tengler.app/game/ v GUI, případně instrukce pro REST API ovládání jsou dostupné na https://warships.tengler.app/docs/.
+Tento projekt implementuje take-home zadání hry **Lodě** pro 2 hráče. Projekt je dostupný jednak přes selfhosting (návod níže) druhak na https://battleships.tengler.app/game/ v GUI, případně instrukce pro REST API ovládání jsou dostupné na https://battleships.tengler.app/docs/.
 
 ## Rychlý start
 
