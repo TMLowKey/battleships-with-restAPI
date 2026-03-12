@@ -1,6 +1,6 @@
 # Lodě – REST API + GUI + CLI
 
-Tento projekt implementuje take-home zadání hry **Lodě** pro 2 hráče. Projekt je dostupný jednak přes selfhosting (návod níže) druhak na https://warships.tengler.app/game/ v GUI, případně instrukce pro REST API ovládání jsou dostupné na https://warships.tengler.app/docs/.
+Tento projekt implementuje take-home zadání hry **Lodě** pro 2 hráče. Projekt je dostupný jednak přes selfhosting (návod níže) druhak na [https://battleships.tengler.app/](https://battleships.tengler.app/) v GUI, případně instrukce pro REST API ovládání jsou dostupné na [https://battleships.tengler.app/docs](https://battleships.tengler.app/docs)/.
 
 ## Rychlý start
 
@@ -169,3 +169,4 @@ Bezpečnostní poznámka: produkční nasazení předpokládá provoz za TLS rev
 * REST API je platformně nezávislé.
 * Webové GUI běží v moderních prohlížečích na všech běžných OS.
 * CLI klient běží všude, kde je dostupný Python 3.12+.
+
