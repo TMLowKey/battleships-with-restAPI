@@ -70,6 +70,7 @@ Pro menší API-first službu jde podle mě o praktičtější volbu.
 * `app/models.py` – request/response modely
 * `app/security.py` – bezpečnostní vrstva (hashování hesel, JWT access/refresh tokeny)
 * `app/static/` – webové GUI (`/game`, `/ui`)
+* `app/services.py` – servisní vrstva aplikace (správa uživatelů, invite kódů a mapování přístupů hráčů ke konkrétním hrám)
 * `tests/` – testy API, enginu a store
 * `Dockerfile`, `docker-compose.yml` – kontejnerizace a runtime konfigurace
 
