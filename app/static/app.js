@@ -16,8 +16,6 @@ const translations = {
     "menu.joinTitle": "Join Existing Game",
     "menu.joinNote": "Use invite code from host",
     "create.title": "Create Game",
-    "create.opponentName": "Opponent Name",
-    "create.opponentPlaceholder": "e.g. Bob",
     "create.boardSize": "Board Size (10-20)",
     "create.submit": "Create and Start",
     "join.title": "Join Game",
@@ -37,9 +35,11 @@ const translations = {
     "game.finished.draw": "Game finished.",
     "game.yourTurn": "Your turn. Click a cell on your shots board.",
     "game.waiting": "Waiting for opponent move...",
+    "game.shot.water": "Shot result: water.",
+    "game.shot.hit": "Shot result: hit.",
+    "game.shot.sunk": "Shot result: ship sunk!",
     "game.noPerspective": "No perspective available.",
     "common.back": "Back",
-    "error.needOpponent": "Please provide opponent name.",
     "error.needInvite": "Please provide invite code.",
     "footer.note": "Created as a Take-home assignment for VZP",
   },
@@ -60,8 +60,6 @@ const translations = {
     "menu.joinTitle": "Připojit se ke hře",
     "menu.joinNote": "Použijte pozvánkový kód od hostitele.",
     "create.title": "Vytvoření hry",
-    "create.opponentName": "Jméno soupeře",
-    "create.opponentPlaceholder": "např. Bob",
     "create.boardSize": "Velikost hrací plochy (10–20)",
     "create.submit": "Vytvořit a spustit",
     "join.title": "Připojení ke hře",
@@ -81,9 +79,11 @@ const translations = {
     "game.finished.draw": "Hra skončila.",
     "game.yourTurn": "Jste na tahu. Klikněte na pole vpravo.",
     "game.waiting": "Čeká se na tah soupeře...",
+    "game.shot.water": "Výsledek střely: voda.",
+    "game.shot.hit": "Výsledek střely: zásah.",
+    "game.shot.sunk": "Výsledek střely: potopená loď!",
     "game.noPerspective": "Perspektiva hráče není k dispozici.",
     "common.back": "Zpět",
-    "error.needOpponent": "Zadejte prosím jméno soupeře.",
     "error.needInvite": "Zadejte prosím pozvánkový kód.",
     "footer.note": "Vytvořeno jako take-home assignment pro VZP.",
   },
@@ -117,9 +117,19 @@ const gameIdEl = document.getElementById("game-id");
 const selfPlayerEl = document.getElementById("self-player");
 const turnPlayerEl = document.getElementById("turn-player");
 const gameStatusEl = document.getElementById("game-status");
+const shotMessageEl = document.getElementById("shot-message");
 const messageEl = document.getElementById("message");
 const ownBoardEl = document.getElementById("own-board");
 const shotsBoardEl = document.getElementById("shots-board");
+const legacyBackFromCreate = document.getElementById("back-from-create");
+const legacyBackFromJoin = document.getElementById("back-from-join");
+
+if (legacyBackFromCreate) {
+  legacyBackFromCreate.remove();
+}
+if (legacyBackFromJoin) {
+  legacyBackFromJoin.remove();
+}
 
 languageSelect.value = state.language;
 applyStaticTranslations();
@@ -136,12 +146,6 @@ document
 document
   .getElementById("go-join")
   .addEventListener("click", () => showScreen("join"));
-document
-  .getElementById("back-from-create")
-  .addEventListener("click", () => showScreen("menu"));
-document
-  .getElementById("back-from-join")
-  .addEventListener("click", () => showScreen("menu"));
 document.getElementById("leave-game").addEventListener("click", leaveGame);
 document.getElementById("logout-btn").addEventListener("click", logout);
 
@@ -149,17 +153,13 @@ createForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   createResult.replaceChildren();
   const data = new FormData(createForm);
-  const opponentName = String(data.get("opponent") || "").trim();
   const boardSize = Number(data.get("size"));
-  if (!opponentName) {
-    createResult.textContent = t("error.needOpponent");
-    return;
-  }
   try {
     const response = await api("/games", {
       method: "POST",
       body: JSON.stringify({
-        opponent_name: opponentName,
+        player1_name: state.username,
+        player2_name: "Opponent",
         board_size: boardSize,
       }),
     });
@@ -259,6 +259,7 @@ function showScreen(target) {
 function attachToGame(gameId) {
   state.gameId = gameId;
   gameIdEl.textContent = gameId;
+  setShotMessage("");
   showScreen("game");
   if (state.pollTimer) {
     window.clearInterval(state.pollTimer);
@@ -277,6 +278,7 @@ function leaveGame() {
   state.boardSize = null;
   ownBoardEl.replaceChildren();
   shotsBoardEl.replaceChildren();
+  setShotMessage("");
   setMessage("");
   showScreen("menu");
 }
@@ -314,19 +316,22 @@ function renderGame(game) {
   selfPlayerEl.textContent = selfName;
   turnPlayerEl.textContent = turnName;
   gameStatusEl.textContent = game.status;
+  let statusMessage = "";
   if (game.status === "finished") {
     if (game.winner_player_id && game.winner_player_id === state.playerId) {
-      setMessage(t("game.finished.win"));
+      statusMessage = t("game.finished.win");
     } else if (game.winner_player_id) {
-      setMessage(t("game.finished.lose"));
+      statusMessage = t("game.finished.lose");
     } else {
-      setMessage(t("game.finished.draw"));
+      statusMessage = t("game.finished.draw");
     }
   } else if (game.current_turn_player_id === state.playerId) {
-    setMessage(t("game.yourTurn"));
+    statusMessage = t("game.yourTurn");
   } else {
-    setMessage(t("game.waiting"));
+    statusMessage = t("game.waiting");
   }
+
+  setMessage(statusMessage);
 
   const perspective = game.perspective;
   if (!perspective) {
@@ -416,16 +421,33 @@ async function fireAt(x, y) {
   }
   state.loadingTurn = true;
   try {
-    await api(`/games/${state.gameId}/turn`, {
+    const turn = await api(`/games/${state.gameId}/turn`, {
       method: "POST",
       body: JSON.stringify({ x, y }),
     });
+    setShotMessage(_shotMessageForResult(turn.result));
     await refreshState();
   } catch (error) {
     setMessage(error.message);
   } finally {
     state.loadingTurn = false;
   }
+}
+
+function _shotMessageForResult(result) {
+  if (!result) {
+    return "";
+  }
+  if (result === "water") {
+    return t("game.shot.water");
+  }
+  if (result === "hit") {
+    return t("game.shot.hit");
+  }
+  if (result === "sunk") {
+    return t("game.shot.sunk");
+  }
+  return "";
 }
 
 function axisCorner() {
@@ -446,7 +468,32 @@ function keyOf(x, y) {
 }
 
 function toSet(coords) {
-  return new Set((coords || []).map((c) => keyOf(c.x, c.y)));
+  return new Set(
+    (coords || [])
+      .map((c) => {
+        const x = parseXToIndex(c.x);
+        const y = Number(c.y);
+        if (!Number.isInteger(x) || !Number.isInteger(y)) {
+          return null;
+        }
+        return keyOf(x, y);
+      })
+      .filter(Boolean),
+  );
+}
+
+function parseXToIndex(value) {
+  if (Number.isInteger(value)) {
+    return value;
+  }
+  const raw = String(value || "").trim().toUpperCase();
+  if (/^\d+$/.test(raw)) {
+    return Number(raw);
+  }
+  if (/^[A-Z]$/.test(raw)) {
+    return raw.charCodeAt(0) - "A".charCodeAt(0);
+  }
+  return Number.NaN;
 }
 
 function columnLabel(index) {
@@ -469,6 +516,10 @@ function appendCodeLine(container, label, value) {
 
 function setMessage(text) {
   messageEl.textContent = text;
+}
+
+function setShotMessage(text) {
+  shotMessageEl.textContent = text;
 }
 
 async function refreshTokens() {

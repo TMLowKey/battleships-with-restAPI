@@ -146,7 +146,17 @@ class AuthTokenService:
 
 
 def build_auth_token_service() -> AuthTokenService:
-    secret = os.getenv("JWT_SECRET", "dev-only-change-me-and-make-it-longer-32b")
+    env = os.getenv("APP_ENV", "development").strip().lower()
+    secret = os.getenv("JWT_SECRET")
+    dev_fallback = "dev-only-change-me-and-make-it-longer-32b"
+
+    if not secret:
+        if env in {"production", "prod"}:
+            raise RuntimeError("JWT_SECRET must be set in production.")
+        secret = dev_fallback
+    elif env in {"production", "prod"} and secret == dev_fallback:
+        raise RuntimeError("Refusing insecure JWT_SECRET fallback in production.")
+
     return AuthTokenService(
         secret=secret,
         issuer=os.getenv("JWT_ISSUER", "battleship-api"),

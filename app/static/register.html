@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Battleship Register</title>
+        <link rel="stylesheet" href="/ui/style.css" />
+    </head>
+    <body>
+        <main class="page">
+            <header class="lang-bar">
+                <label for="language-select" data-i18n="language.label">Language</label>
+                <select id="language-select" aria-label="Language selector">
+                    <option value="en">English</option>
+                    <option value="cs">Cestina</option>
+                </select>
+            </header>
+
+            <section class="screen centered">
+                <div class="card title-card">
+                    <h1>Battleship</h1>
+                    <p data-i18n="register.subtitle">Create your account.</p>
+                    <form id="register-form" class="stack-form">
+                        <label for="username" data-i18n="register.username">Username</label>
+                        <input
+                            id="username"
+                            name="username"
+                            required
+                            minlength="3"
+                            maxlength="100"
+                            placeholder="e.g. alice"
+                            data-i18n-placeholder="register.usernamePlaceholder"
+                        />
+                        <label for="password" data-i18n="register.password">Password</label>
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            required
+                            minlength="8"
+                            maxlength="200"
+                            placeholder="at least 8 characters"
+                            data-i18n-placeholder="register.passwordPlaceholder"
+                        />
+                        <label for="password-confirm" data-i18n="register.confirmPassword">Confirm password</label>
+                        <input
+                            id="password-confirm"
+                            name="passwordConfirm"
+                            type="password"
+                            required
+                            minlength="8"
+                            maxlength="200"
+                            placeholder="repeat password"
+                            data-i18n-placeholder="register.confirmPlaceholder"
+                        />
+                        <div class="actions">
+                            <button type="submit" data-i18n="register.submit">Create account</button>
+                            <button id="go-login-btn" class="ghost" type="button" data-i18n="register.backToLogin">Back to Sign In</button>
+                        </div>
+                    </form>
+                    <p id="register-message" class="muted"></p>
+                </div>
+            </section>
+        </main>
+
+        <script src="/ui/register.js?v=1"></script>
+    </body>
+</html>

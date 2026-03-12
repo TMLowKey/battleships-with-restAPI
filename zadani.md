@@ -22,7 +22,7 @@ Požadavky:
 -     [X]
 -   1× tvar:
 -   [XXXX]
--       [X]
+-     [X]
 
 -   Hra probíhá v jednotlivých tazích, kdy se na server předávají následující parametry:
 

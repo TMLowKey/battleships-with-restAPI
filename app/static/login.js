@@ -25,6 +25,7 @@ const languageSelect = document.getElementById("language-select");
 const welcomeForm = document.getElementById("welcome-form");
 const registerBtn = document.getElementById("register-btn");
 const authMessage = document.getElementById("auth-message");
+const usernameInput = document.getElementById("username");
 
 let language = localStorage.getItem("battleship-language") || "en";
 languageSelect.value = language;
@@ -42,7 +43,7 @@ welcomeForm.addEventListener("submit", (event) => {
 });
 
 registerBtn.addEventListener("click", () => {
-  void authenticate("register");
+  window.location.assign("/register");
 });
 
 void tryRestoreSession();
@@ -95,9 +96,15 @@ async function authenticate(mode) {
   }
 
   const body = await response.json();
+  localStorage.setItem("battleship-last-username", username);
   localStorage.setItem("battleship-access-token", body.access_token);
   localStorage.setItem("battleship-refresh-token", body.refresh_token);
   window.location.replace("/game/");
+}
+
+const lastUsername = localStorage.getItem("battleship-last-username");
+if (lastUsername && usernameInput && !usernameInput.value) {
+  usernameInput.value = lastUsername;
 }
 
 function applyStaticTranslations() {

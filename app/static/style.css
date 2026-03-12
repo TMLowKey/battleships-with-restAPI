@@ -208,7 +208,11 @@ button {
 .boards {
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(560px, 1fr));
+}
+
+.boards > div {
+  min-width: 0;
 }
 
 .board {
@@ -218,6 +222,9 @@ button {
   padding: 6px;
   border-radius: 8px;
   border: 1px solid var(--line);
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .cell,
@@ -281,5 +288,9 @@ button {
 
   .actions button {
     flex: 1;
+  }
+
+  .boards {
+    grid-template-columns: 1fr;
   }
 }

@@ -32,6 +32,7 @@ from app.models import (
     GameStateResponse,
     JoinGameRequest,
     JoinGameResponse,
+    RejoinGameRequest,
     PerspectiveBoardOut,
     PlayerOut,
     TurnRequest,
@@ -54,6 +55,7 @@ class InviteRecord:
     player_id: str
     expires_at: datetime
     used: bool = False
+    claimed_by_user_id: str | None = None
 
 
 class InMemoryUserStore:
@@ -108,16 +110,23 @@ class GameAccessService:
             )
         return code
 
-    def use_invite(self, invite_code: str) -> InviteRecord:
+    def use_invite(self, invite_code: str, user_id: str) -> InviteRecord:
         with self._lock:
             record = self._invites.get(invite_code)
             if record is None:
                 raise HTTPException(status_code=404, detail="Invite code not found.")
-            if record.used:
-                raise HTTPException(status_code=409, detail="Invite code was already used.")
             if datetime.now(timezone.utc) > record.expires_at:
                 raise HTTPException(status_code=410, detail="Invite code has expired.")
-            record.used = True
+
+            if (record.game_id, user_id) in self._memberships:
+                return record
+
+            if record.claimed_by_user_id is None:
+                record.claimed_by_user_id = user_id
+                record.used = True
+                return record
+            if record.claimed_by_user_id != user_id:
+                raise HTTPException(status_code=409, detail="Invite code was already used.")
             return record
 
 
@@ -188,6 +197,11 @@ def login_page() -> RedirectResponse:
     return RedirectResponse(url="/ui/login.html", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
 
 
+@app.get("/register", include_in_schema=False)
+def register_page() -> RedirectResponse:
+    return RedirectResponse(url="/ui/register.html", status_code=status.HTTP_307_TEMPORARY_REDIRECT)
+
+
 @app.get("/health", include_in_schema=False)
 def healthcheck() -> dict[str, str]:
     return {"status": "ok"}
@@ -246,8 +260,8 @@ def me(auth: UserAuthContext = Depends(_current_user)) -> AuthMeResponse:
 def create_game(payload: CreateGameRequest, auth: UserAuthContext = Depends(_current_user)) -> CreateGameResponse:
     try:
         game = engine.create_game(
-            player1_name=auth.username,
-            player2_name=payload.opponent_name,
+            player1_name=payload.player1_name,
+            player2_name=payload.player2_name,
             board_size=payload.board_size,
         )
         store.save(game)
@@ -270,15 +284,36 @@ def create_game(payload: CreateGameRequest, auth: UserAuthContext = Depends(_cur
 
 @app.post("/games/join", response_model=JoinGameResponse)
 def join_game(payload: JoinGameRequest, auth: UserAuthContext = Depends(_current_user)) -> JoinGameResponse:
-    invite = access.use_invite(payload.invite_code.strip())
+    invite = access.use_invite(payload.invite_code.strip(), auth.user_id)
+
+    existing_player_id = access.player_for(invite.game_id, auth.user_id)
+    if existing_player_id is not None:
+        return JoinGameResponse(game_id=invite.game_id, player_id=existing_player_id)
+
     try:
         game = store.get(invite.game_id)
     except GameNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     if invite.player_id not in game.players:
         raise HTTPException(status_code=403, detail="Invite does not map to this game player.")
+
+    game.players[invite.player_id].name = auth.username
     access.assign_player(invite.game_id, auth.user_id, invite.player_id)
     return JoinGameResponse(game_id=invite.game_id, player_id=invite.player_id)
+
+
+@app.post("/games/rejoin", response_model=JoinGameResponse)
+def rejoin_game(payload: RejoinGameRequest, auth: UserAuthContext = Depends(_current_user)) -> JoinGameResponse:
+    player_id = access.player_for(payload.game_id, auth.user_id)
+    if player_id is None:
+        raise HTTPException(status_code=404, detail="No existing membership for this game.")
+    try:
+        game = store.get(payload.game_id)
+    except GameNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    if player_id not in game.players:
+        raise HTTPException(status_code=403, detail="Player mapping is invalid for this game.")
+    return JoinGameResponse(game_id=payload.game_id, player_id=player_id)
 
 
 @app.post("/games/{game_id}/turn", response_model=TurnResponse)
@@ -293,11 +328,15 @@ def play_turn(game_id: str, payload: TurnRequest, auth: UserAuthContext = Depend
             game_id=game.game_id,
             status=game.status,
             result=turn.result,
-            coordinate=CoordinateOut(x=turn.coordinate[0], y=turn.coordinate[1]),
+            coordinate=CoordinateOut(x=_x_label(turn.coordinate[0]), y=turn.coordinate[1]),
+            shooter_player_id=player_id,
+            shooter_player_name=game.players[player_id].name,
             current_turn_player_id=game.current_turn,
-            next_player_id=turn.next_player_id,
+            current_turn_player_name=game.players[game.current_turn].name,
             winner_player_id=turn.winner_player_id,
+            winner_player_name=game.players[turn.winner_player_id].name if turn.winner_player_id else None,
             target_player_id=turn.target_player_id,
+            target_player_name=game.players[turn.target_player_id].name,
         )
     except GameNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
@@ -339,4 +378,8 @@ def get_game_state(game_id: str, auth: UserAuthContext = Depends(_current_user))
 
 
 def _coords(cells: list[tuple[int, int]]) -> list[CoordinateOut]:
-    return [CoordinateOut(x=x, y=y) for x, y in cells]
+    return [CoordinateOut(x=_x_label(x), y=y) for x, y in cells]
+
+
+def _x_label(value: int) -> str:
+    return chr(ord("A") + value)

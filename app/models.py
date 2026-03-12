@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class CoordinateOut(BaseModel):
-    x: int
+    x: str
     y: int
 
 
@@ -43,15 +43,16 @@ class AuthMeResponse(BaseModel):
 
 
 class CreateGameRequest(BaseModel):
-    opponent_name: str = Field(min_length=1, max_length=100)
+    player1_name: str = Field(min_length=1, max_length=100)
+    player2_name: str = Field(min_length=1, max_length=100)
     board_size: int = Field(ge=10, le=20)
 
-    @field_validator("opponent_name")
+    @field_validator("player1_name", "player2_name")
     @classmethod
-    def non_blank(cls, value: str) -> str:
+    def non_blank_player_name(cls, value: str) -> str:
         value = value.strip()
         if not value:
-            raise ValueError("Opponent name cannot be blank.")
+            raise ValueError("Player name cannot be blank.")
         return value
 
 
@@ -78,9 +79,37 @@ class JoinGameResponse(BaseModel):
     player_id: str
 
 
+class RejoinGameRequest(BaseModel):
+    game_id: str = Field(min_length=8, max_length=64)
+
+
 class TurnRequest(BaseModel):
     x: int
     y: int
+
+    @field_validator("x", mode="before")
+    @classmethod
+    def parse_x(cls, value: object) -> int:
+        if isinstance(value, int):
+            return value
+        if isinstance(value, str):
+            raw = value.strip().upper()
+            if raw.isdigit():
+                return int(raw)
+            if len(raw) == 1 and "A" <= raw <= "Z":
+                return ord(raw) - ord("A")
+        raise ValueError("X coordinate must be a number or letter.")
+
+    @field_validator("y", mode="before")
+    @classmethod
+    def parse_y(cls, value: object) -> int:
+        if isinstance(value, int):
+            return value
+        if isinstance(value, str):
+            raw = value.strip()
+            if raw.isdigit():
+                return int(raw)
+        raise ValueError("Y coordinate must be numeric.")
 
 
 class TurnResponse(BaseModel):
@@ -88,10 +117,14 @@ class TurnResponse(BaseModel):
     status: str
     result: str
     coordinate: CoordinateOut
+    shooter_player_id: str
+    shooter_player_name: str
     current_turn_player_id: str
-    next_player_id: str | None
+    current_turn_player_name: str
     winner_player_id: str | None
+    winner_player_name: str | None
     target_player_id: str
+    target_player_name: str
 
 
 class PerspectiveBoardOut(BaseModel):

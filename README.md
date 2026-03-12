@@ -1,6 +1,6 @@
-# Lodě – REST API + GUI + CLI
+# Lodě – REST API + GUI
 
-Tento projekt implementuje take-home zadání hry **Lodě** pro 2 hráče. Projekt je dostupný jednak přes selfhosting (návod níže) druhak na [https://battleships.tengler.app/](https://battleships.tengler.app/) v GUI, případně instrukce pro REST API ovládání jsou dostupné na [https://battleships.tengler.app/docs](https://battleships.tengler.app/docs)/.
+Tento projekt implementuje take-home zadání hry **Lodě** pro 2 hráče. Projekt je dostupný jednak přes selfhosting (návod níže) druhak na https://warships.tengler.app/game/ v GUI, případně instrukce pro REST API ovládání jsou dostupné na https://warships.tengler.app/docs/.
 
 ## Rychlý start
 
@@ -25,25 +25,28 @@ docker compose down
 **Požadovaný rozsah zadání (REST API):**
 
 * vytvoření nové hry,
-* připojení hráče pomocí invite kódu,
 * provedení tahu,
 * získání stavu hry.
 
 **Nad rámec zadání:**
 
 * webové GUI (`/game`),
-* CLI klient,
-* Docker konfigurace pro snadné spuštění a deployment.
-* Implementace JWT token
+* Docker konfigurace pro snadné spuštění a deployment,
+* implementace JWT token,
+* připojení hráče pomocí invite kódu,
+* anglická mutace.
+
 
 ## Proč je zde víc než jen API
 
 Cílem nebylo pouze splnit požadované endpointy, ale ukázat i end-to-end řešení:
 
 * API vrstvu jako základ zadání,
-* dva různé klienty nad stejným API (prohlížeč + terminál),
+* webový klient nad stejným API (prohlížeč),
 * reprodukovatelné spuštění pomocí Dockeru,
-* implementace JWT autentizace je zvolena místo OAuth kvůli menší komplexitě a dostatečnosti pro tento projekt, zároveň s ohledem na to, že JWT je explicitně požadováno v požadavcích na pozici.
+* implementace JWT autentizace je zvolena místo OAuth kvůli menší komplexitě a dostatečnosti pro tento projekt, zároveň s ohledem na to, že JWT je explicitně požadováno v požadavcích na pozici,
+* připojení hráče pomocí invite kódu bylo zvoleno jedna kvůli snazšímu testování a druhak pro lepší user-experience,
+* angličtina je v backend/API projektech běžný standard, takže názvy endpointů, modelů, stavů a response hodnot v angličtině zlepšují čitelnost a přenositelnost řešení.
 
 Docker je zde záměrně i jako ukázka práce s kontejnerizací a konzistentním během napříč prostředími.
 
@@ -67,8 +70,7 @@ Pro menší API-first službu jde podle mě o praktičtější volbu.
 * `app/models.py` – request/response modely
 * `app/security.py` – bezpečnostní vrstva (hashování hesel, JWT access/refresh tokeny)
 * `app/static/` – webové GUI (`/game`, `/ui`)
-* `app/cli.py` – CLI klient
-* `tests/` – testy API, enginu, store a CLI
+* `tests/` – testy API, enginu a store
 * `Dockerfile`, `docker-compose.yml` – kontejnerizace a runtime konfigurace
 
 ## Spuštění
@@ -107,24 +109,11 @@ Poté je aplikace dostupná na:
 python -m pytest tests --import-mode=importlib
 ```
 
-## API, GUI a CLI
+## API a GUI
 
 * API dokumentace: `/docs`
 * GUI verze hry: `/game`
 * Root `/` přesměrovává na `/login`
-
-Použití CLI:
-
-```text
-cli.py [-h] [--base-url BASE_URL] {register,login,logout,me,create,join,state,turn,play}
-```
-
-Příklad:
-
-```bash
-python app/cli.py --base-url http://127.0.0.1:18000 register --username alice
-python app/cli.py --base-url http://127.0.0.1:18000 create --opponent Bob --size 10
-```
 
 ## Konfigurace
 
@@ -150,6 +139,8 @@ Pro JWT lze navíc nastavit (doporučeno hlavně pro produkci):
 
 ## Limity a edge cases
 
+Aktuální implementace je záměrně jednoduchá a odpovídá rozsahu take-home zadání:
+
 * hra používá pouze in-memory úložiště (bez perzistence),
 * po restartu procesu se stav her ztratí,
 * autentizace je řešena JWT (access/refresh) tokeny navázanými na uživatelský účet,
@@ -168,5 +159,3 @@ Bezpečnostní poznámka: produkční nasazení předpokládá provoz za TLS rev
 
 * REST API je platformně nezávislé.
 * Webové GUI běží v moderních prohlížečích na všech běžných OS.
-* CLI klient běží všude, kde je dostupný Python 3.12+.
-

@@ -64,19 +64,6 @@
                 <div class="card">
                     <h2 data-i18n="create.title">Create Game</h2>
                     <form id="create-form" class="stack-form">
-                        <label
-                            for="opponent-name"
-                            data-i18n="create.opponentName"
-                            >Opponent Name</label
-                        >
-                        <input
-                            id="opponent-name"
-                            name="opponent"
-                            required
-                            maxlength="100"
-                            placeholder="e.g. Bob"
-                            data-i18n-placeholder="create.opponentPlaceholder"
-                        />
                         <label for="board-size" data-i18n="create.boardSize"
                             >Board Size (10-20)</label
                         >
@@ -92,14 +79,6 @@
                         <div class="actions">
                             <button type="submit" data-i18n="create.submit">
                                 Create and Start
-                            </button>
-                            <button
-                                id="back-from-create"
-                                class="ghost"
-                                type="button"
-                                data-i18n="common.back"
-                            >
-                                Back
                             </button>
                         </div>
                     </form>
@@ -124,14 +103,6 @@
                         <div class="actions">
                             <button type="submit" data-i18n="join.submit">
                                 Join
-                            </button>
-                            <button
-                                id="back-from-join"
-                                class="ghost"
-                                type="button"
-                                data-i18n="common.back"
-                            >
-                                Back
                             </button>
                         </div>
                     </form>
@@ -170,6 +141,7 @@
                             <span id="game-status">-</span>
                         </div>
                     </div>
+                    <p id="shot-message" class="message"></p>
                     <p id="message" class="message"></p>
 
                     <div class="boards">
@@ -190,6 +162,6 @@
             </footer>
         </main>
 
-        <script src="/ui/app.js?v=3"></script>
+        <script src="/ui/app.js?v=4"></script>
     </body>
 </html>
