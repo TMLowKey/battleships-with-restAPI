@@ -1,11 +1,8 @@
 from __future__ import annotations
 
 import os
-import secrets
-from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
 from pathlib import Path
-from threading import RLock
 
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.responses import RedirectResponse
@@ -39,95 +36,15 @@ from app.models import (
     TurnResponse,
 )
 from app.security import PasswordHasher, UserAuthContext, build_auth_token_service
+from app.services import (
+    GameAccessService,
+    InMemoryUserStore,
+    InviteAlreadyUsedError,
+    InviteExpiredError,
+    InviteNotFoundError,
+    UserAlreadyExistsError,
+)
 from app.store import GameLimitReachedError, InMemoryGameStore
-
-
-@dataclass
-class UserRecord:
-    user_id: str
-    username: str
-    password_hash: str
-
-
-@dataclass
-class InviteRecord:
-    game_id: str
-    player_id: str
-    expires_at: datetime
-    used: bool = False
-    claimed_by_user_id: str | None = None
-
-
-class InMemoryUserStore:
-    def __init__(self) -> None:
-        self._by_username: dict[str, UserRecord] = {}
-        self._by_id: dict[str, UserRecord] = {}
-        self._lock = RLock()
-
-    def create(self, username: str, password_hash: str) -> UserRecord:
-        norm = username.strip().lower()
-        with self._lock:
-            if norm in self._by_username:
-                raise ValueError("Username already exists.")
-            user = UserRecord(user_id=secrets.token_hex(16), username=username.strip(), password_hash=password_hash)
-            self._by_username[norm] = user
-            self._by_id[user.user_id] = user
-            return user
-
-    def get_by_username(self, username: str) -> UserRecord | None:
-        with self._lock:
-            return self._by_username.get(username.strip().lower())
-
-    def get_by_id(self, user_id: str) -> UserRecord | None:
-        with self._lock:
-            return self._by_id.get(user_id)
-
-
-class GameAccessService:
-    def __init__(self, invite_ttl: timedelta = timedelta(hours=24)) -> None:
-        self._invite_ttl = invite_ttl
-        self._memberships: dict[tuple[str, str], str] = {}
-        self._invites: dict[str, InviteRecord] = {}
-        self._lock = RLock()
-
-    def assign_player(self, game_id: str, user_id: str, player_id: str) -> None:
-        with self._lock:
-            self._memberships[(game_id, user_id)] = player_id
-
-    def player_for(self, game_id: str, user_id: str) -> str | None:
-        with self._lock:
-            return self._memberships.get((game_id, user_id))
-
-    def create_invite(self, game_id: str, player_id: str) -> str:
-        code = secrets.token_urlsafe(6)
-        with self._lock:
-            while code in self._invites:
-                code = secrets.token_urlsafe(6)
-            self._invites[code] = InviteRecord(
-                game_id=game_id,
-                player_id=player_id,
-                expires_at=datetime.now(timezone.utc) + self._invite_ttl,
-            )
-        return code
-
-    def use_invite(self, invite_code: str, user_id: str) -> InviteRecord:
-        with self._lock:
-            record = self._invites.get(invite_code)
-            if record is None:
-                raise HTTPException(status_code=404, detail="Invite code not found.")
-            if datetime.now(timezone.utc) > record.expires_at:
-                raise HTTPException(status_code=410, detail="Invite code has expired.")
-
-            if (record.game_id, user_id) in self._memberships:
-                return record
-
-            if record.claimed_by_user_id is None:
-                record.claimed_by_user_id = user_id
-                record.used = True
-                return record
-            if record.claimed_by_user_id != user_id:
-                raise HTTPException(status_code=409, detail="Invite code was already used.")
-            return record
 
 
 app = FastAPI(title="Battleship REST API", version="0.1.0")
@@ -216,7 +133,7 @@ def register(payload: AuthRegisterRequest) -> AuthTokenResponse:
 
     try:
         user = users.create(payload.username, hashed)
-    except ValueError as exc:
+    except UserAlreadyExistsError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
     return AuthTokenResponse(
@@ -284,7 +201,14 @@ def create_game(payload: CreateGameRequest, auth: UserAuthContext = Depends(_cur
 
 @app.post("/games/join", response_model=JoinGameResponse)
 def join_game(payload: JoinGameRequest, auth: UserAuthContext = Depends(_current_user)) -> JoinGameResponse:
-    invite = access.use_invite(payload.invite_code.strip(), auth.user_id)
+    try:
+        invite = access.use_invite(payload.invite_code.strip(), auth.user_id)
+    except InviteNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except InviteExpiredError as exc:
+        raise HTTPException(status_code=410, detail=str(exc)) from exc
+    except InviteAlreadyUsedError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
 
     existing_player_id = access.player_for(invite.game_id, auth.user_id)
     if existing_player_id is not None:
